@@ -3,9 +3,6 @@
 <!-- Replace with your actual banner image -->
 <img src="Screenshots/banner.png" alt="Megumin Suite Banner" width="100%">
 
-# 💥 Megumin Suite V7 💥
-**The Ultimate Narrative & Memory Engine for SillyTavern**
-
 [![SillyTavern](https://img.shields.io/badge/SillyTavern-1.12%2B-blue.svg?style=for-the-badge&logo=codeigniter)](https://github.com/SillyTavern/SillyTavern)
 [![Version](https://img.shields.io/badge/Version-V7_Beta-green.svg?style=for-the-badge)](#)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-purple.svg?style=for-the-badge)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
