@@ -2079,7 +2079,7 @@ function renderStoryPlanner(c) {
     $("#sp_current_plan").on("input", e => { sp.currentPlan = $(e.target).val(); saveProfileToMemory(); });
 
     $("#sp_btn_generate").on("click", async function () {
-        const chatText = getCleanedChatHistory();
+        const chatText = getChatHistoryForStoryPlan();
         if (chatText.length < 100) return toastr.warning("Not enough chat history to generate a plot.");
 
         const btn = $(this);
@@ -5305,6 +5305,57 @@ function getCleanedChatHistory() {
     return cleanedMessages.join("\n\n");
 }
 
+function getChatHistoryForStoryPlan() {
+    const context = getContext();
+    if (!context.chat || context.chat.length === 0) return "";
+
+    // const messages = context.chat.filter(m => !m.is_system);
+    const messages = context.chat.filter(m => true);
+    let cleaned_messages = [];
+
+    for (let m of messages)
+    {
+        cleaned_messages.push({
+            mes: meguminCleanChatHistoryText(m.mes),
+            is_system: m.is_system,
+            is_user: m.is_user
+        });
+    }
+
+    cleaned_messages = cleaned_messages.filter(t => t.mes.length > 0);
+    let result = [];
+    let is_first_message = true;
+    
+    for (let m of cleaned_messages)
+    {
+        if (is_first_message)
+        {
+            is_first_message = false;
+        }
+        else
+        {
+            result.push("\n\n");
+        }
+
+        if (m.is_system)
+        {
+            result.push("SYSTEM:\n");
+        }
+        else if (m.is_user)
+        {
+            result.push("PLAYER:\n");
+        }
+        else
+        {
+            result.push("GAME MASTER:\n");
+        }
+        
+        result.push(m.mes);
+    }
+
+    return result.join("");
+}
+
 function getChatForNpcScan() {
     const context = getContext();
     if (!context.chat || context.chat.length === 0) return "";
@@ -6847,7 +6898,7 @@ jQuery(async () => {
                     if (aiMsgCount > 0 && aiMsgCount % sp.autoFreq === 0) {
                         toastr.info("Auto-Generating new Story Plan...", "Megumin Suite");
                         setTimeout(async () => {
-                            const chatText = getCleanedChatHistory();
+                            const chatText = getChatHistoryForStoryPlan();
                             if (chatText.length < 100) return;
                             try {
                                 let output = sp.backend === "direct" ? await generateStoryPlanLogic(chatText) : await new Promise(r => useMeguminEngine(async () => r(await generateStoryPlanLogic(chatText))));
